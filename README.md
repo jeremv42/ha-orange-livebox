@@ -38,6 +38,8 @@ Copy `custom_components/orange_livebox` into your Home Assistant
 
 ## Configuration
 
+Once the integration is installed **and Home Assistant restarted**:
+
 [![Open your Home Assistant instance and start setting up Orange Livebox.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=orange_livebox)
 
 Or *Settings → Devices & services → Add integration → Orange Livebox*.
