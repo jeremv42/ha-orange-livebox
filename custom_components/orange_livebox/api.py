@@ -58,11 +58,14 @@ class LiveboxData:
     wan: dict[str, Any] = field(default_factory=dict)
     dsl: dict[str, Any] | None = None
     gpon: dict[str, Any] | None = None
-    wan_stats: dict[str, Any] | None = None
+    ipv6: dict[str, Any] | None = None
+    wan_stats: dict[str, int] | None = None
     wifi: dict[str, Any] | None = None
     guest_wifi: dict[str, Any] | None = None
     iptv: dict[str, Any] | None = None
     voip_lines: list[dict[str, Any]] = field(default_factory=list)
+    calls: list[dict[str, Any]] | None = None
+    firewall_level: str | None = None
     devices: dict[str, dict[str, Any]] = field(default_factory=dict)
     boot_time: datetime | None = None
 
@@ -256,10 +259,28 @@ class LiveboxClient:
         )
         return _first_mib(status, mib)
 
-    async def async_get_wan_stats(self) -> dict[str, Any] | None:
-        """Return the WAN traffic counters (RxBytes, TxBytes...)."""
-        stats = await self._optional("NeMo.Intf.data", "getNetDevStats")
-        return stats if isinstance(stats, dict) else None
+    async def async_get_ipv6(self) -> dict[str, Any] | None:
+        """Return the IPv6 state, including the WAN IPv6 address."""
+        ipv6 = await self._optional("NMC.IPv6", "get")
+        return ipv6 if isinstance(ipv6, dict) else None
+
+    async def async_get_wan_stats(self) -> dict[str, int] | None:
+        """Return the WAN traffic counters as ``rx_bytes``/``tx_bytes``.
+
+        ``HomeLan.getWANCounters`` exists on recent firmwares; older ones only
+        expose the counters of the WAN network interface.
+        """
+        counters = await self._optional("HomeLan", "getWANCounters")
+        if isinstance(counters, dict) and "BytesReceived" in counters:
+            return {
+                "rx_bytes": counters["BytesReceived"],
+                "tx_bytes": counters["BytesSent"],
+            }
+        for interface in ("data", "veip0"):
+            stats = await self._optional(f"NeMo.Intf.{interface}", "getNetDevStats")
+            if isinstance(stats, dict) and "RxBytes" in stats:
+                return {"rx_bytes": stats["RxBytes"], "tx_bytes": stats["TxBytes"]}
+        return None
 
     async def async_get_wifi(self) -> dict[str, Any] | None:
         """Return the global Wi-Fi state."""
@@ -285,6 +306,16 @@ class LiveboxClient:
                 lines.append({"trunk": trunk.get("name"), **line})
         return lines
 
+    async def async_get_calls(self) -> list[dict[str, Any]] | None:
+        """Return the call history kept by the Livebox."""
+        calls = await self._optional("VoiceService.VoiceApplication", "getCallList")
+        return calls if isinstance(calls, list) else None
+
+    async def async_get_firewall_level(self) -> str | None:
+        """Return the IPv4 firewall level (Low, Medium, High, Custom)."""
+        level = await self._optional("Firewall", "getFirewallLevel")
+        return level if isinstance(level, str) else None
+
     async def async_get_devices(self) -> dict[str, dict[str, Any]]:
         """Return the devices known by the Livebox, keyed by lowercase MAC."""
         raw = await self._optional("Devices", "get", {"expression": DEVICES_EXPRESSION})
@@ -309,11 +340,15 @@ class LiveboxClient:
             data.dsl = await self.async_get_mib("data", "dsl")
         elif link_type in ("gpon", "sfp", "ethernet_fiber") or not link_type:
             data.gpon = await self.async_get_mib("veip0", "gpon")
+        data.ipv6 = await self.async_get_ipv6()
         data.wan_stats = await self.async_get_wan_stats()
         data.wifi = await self.async_get_wifi()
         data.guest_wifi = await self.async_get_guest_wifi()
         data.iptv = await self.async_get_iptv()
         data.voip_lines = await self.async_get_voip_lines()
+        if data.voip_lines:
+            data.calls = await self.async_get_calls()
+        data.firewall_level = await self.async_get_firewall_level()
         data.devices = await self.async_get_devices()
         return data
 

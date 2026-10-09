@@ -86,4 +86,6 @@ class LiveboxCoordinator(DataUpdateCoordinator[LiveboxData]):
             if previous and abs(boot_time - previous) < BOOT_TIME_TOLERANCE:
                 boot_time = previous
             data.boot_time = boot_time
+        elif self.data:
+            data.boot_time = self.data.boot_time
         return data

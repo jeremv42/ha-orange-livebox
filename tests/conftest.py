@@ -49,14 +49,15 @@ def make_data() -> LiveboxData:
             "LinkState": "up",
             "ConnectionState": "Bound",
             "IPAddress": "203.0.113.10",
-            "IPv6Address": "2001:db8::1",
         },
         gpon={
             "SignalRxPower": -19500,
             "SignalTxPower": 2300,
-            "ONUState": "O5_Operation",
+            "OnuState": "O5_Operation",
+            "Temperature": 51,
         },
-        wan_stats={"RxBytes": 123456789, "TxBytes": 987654},
+        ipv6={"Enable": True, "IPv6Address": "2001:db8::1"},
+        wan_stats={"rx_bytes": 123456789, "tx_bytes": 987654},
         wifi={"Enable": True, "Status": True},
         guest_wifi={"Enable": False},
         iptv={"IPTVStatus": "Available"},
@@ -69,6 +70,12 @@ def make_data() -> LiveboxData:
                 "directoryNumber": "+33100000000",
             }
         ],
+        calls=[
+            {"callType": "missed", "viewed": False, "remoteNumber": "0100000000"},
+            {"callType": "missed", "viewed": True, "remoteNumber": "0100000001"},
+            {"callType": "succeeded", "viewed": False, "remoteNumber": "0100000002"},
+        ],
+        firewall_level="Low",
         devices={
             "11:22:33:44:55:66": {
                 "mac": "11:22:33:44:55:66",

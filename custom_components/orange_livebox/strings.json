@@ -37,39 +37,98 @@
   },
   "entity": {
     "binary_sensor": {
-      "wan": { "name": "Internet connection" },
-      "iptv": { "name": "TV service" },
-      "phone_line": { "name": "Phone line {line}" }
+      "wan": {
+        "name": "Internet connection"
+      },
+      "iptv": {
+        "name": "TV service"
+      },
+      "phone_line": {
+        "name": "Phone line {line}"
+      }
     },
     "button": {
-      "ring_phone": { "name": "Ring phone" }
+      "ring_phone": {
+        "name": "Ring phone"
+      }
     },
     "sensor": {
-      "last_boot": { "name": "Last boot" },
-      "external_ip": { "name": "External IP" },
-      "external_ipv6": { "name": "External IPv6" },
-      "link_type": { "name": "Link type" },
-      "connected_devices": { "name": "Connected devices" },
-      "wan_received": { "name": "Data received" },
-      "wan_sent": { "name": "Data sent" },
-      "dsl_downstream_rate": { "name": "DSL download rate" },
-      "dsl_upstream_rate": { "name": "DSL upload rate" },
-      "dsl_downstream_max_rate": { "name": "DSL max download rate" },
-      "dsl_upstream_max_rate": { "name": "DSL max upload rate" },
-      "dsl_downstream_noise_margin": { "name": "DSL download noise margin" },
-      "dsl_upstream_noise_margin": { "name": "DSL upload noise margin" },
-      "dsl_downstream_attenuation": { "name": "DSL download attenuation" },
-      "dsl_upstream_attenuation": { "name": "DSL upload attenuation" },
-      "fiber_rx_power": { "name": "Fiber received power" },
-      "fiber_tx_power": { "name": "Fiber transmitted power" },
-      "fiber_onu_state": { "name": "Fiber ONU state" }
+      "last_boot": {
+        "name": "Last boot"
+      },
+      "external_ip": {
+        "name": "External IP"
+      },
+      "external_ipv6": {
+        "name": "External IPv6"
+      },
+      "link_type": {
+        "name": "Link type"
+      },
+      "connected_devices": {
+        "name": "Connected devices"
+      },
+      "wan_received": {
+        "name": "Data received"
+      },
+      "wan_sent": {
+        "name": "Data sent"
+      },
+      "dsl_downstream_rate": {
+        "name": "DSL download rate"
+      },
+      "dsl_upstream_rate": {
+        "name": "DSL upload rate"
+      },
+      "dsl_downstream_max_rate": {
+        "name": "DSL max download rate"
+      },
+      "dsl_upstream_max_rate": {
+        "name": "DSL max upload rate"
+      },
+      "dsl_downstream_noise_margin": {
+        "name": "DSL download noise margin"
+      },
+      "dsl_upstream_noise_margin": {
+        "name": "DSL upload noise margin"
+      },
+      "dsl_downstream_attenuation": {
+        "name": "DSL download attenuation"
+      },
+      "dsl_upstream_attenuation": {
+        "name": "DSL upload attenuation"
+      },
+      "fiber_rx_power": {
+        "name": "Fiber received power"
+      },
+      "fiber_tx_power": {
+        "name": "Fiber transmitted power"
+      },
+      "fiber_onu_state": {
+        "name": "Fiber ONU state"
+      },
+      "fiber_temperature": {
+        "name": "Fiber module temperature"
+      },
+      "missed_calls": {
+        "name": "Missed calls"
+      },
+      "firewall_level": {
+        "name": "Firewall level"
+      }
     },
     "switch": {
-      "wifi": { "name": "Wi-Fi" },
-      "guest_wifi": { "name": "Guest Wi-Fi" }
+      "wifi": {
+        "name": "Wi-Fi"
+      },
+      "guest_wifi": {
+        "name": "Guest Wi-Fi"
+      }
     }
   },
   "exceptions": {
-    "action_failed": { "message": "The Livebox rejected the request: {error}" }
+    "action_failed": {
+      "message": "The Livebox rejected the request: {error}"
+    }
   }
 }

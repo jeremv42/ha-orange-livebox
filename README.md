@@ -53,8 +53,8 @@ scripts/develop        # run a local Home Assistant on http://localhost:8123
 To see what your own box returns (and find new data worth exposing):
 
 ```bash
-.venv/bin/python scripts/probe.py --password 'xxxx' > probe-full.json
-.venv/bin/python scripts/probe.py --password 'xxxx' --call NeMo.Intf.data getMIBs '{"mibs":"dsl"}'
+.venv/bin/python scripts/probe.py > probe-full.json   # asks for the password
+.venv/bin/python scripts/probe.py --call NeMo.Intf.data getMIBs '{"mibs":"dsl"}'
 ```
 
 Probe dumps contain MAC/IP addresses and the serial number; `probe-*.json`

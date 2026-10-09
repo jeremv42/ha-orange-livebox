@@ -37,39 +37,98 @@
   },
   "entity": {
     "binary_sensor": {
-      "wan": { "name": "Connexion Internet" },
-      "iptv": { "name": "Service TV" },
-      "phone_line": { "name": "Ligne téléphonique {line}" }
+      "wan": {
+        "name": "Connexion Internet"
+      },
+      "iptv": {
+        "name": "Service TV"
+      },
+      "phone_line": {
+        "name": "Ligne téléphonique {line}"
+      }
     },
     "button": {
-      "ring_phone": { "name": "Faire sonner le téléphone" }
+      "ring_phone": {
+        "name": "Faire sonner le téléphone"
+      }
     },
     "sensor": {
-      "last_boot": { "name": "Dernier démarrage" },
-      "external_ip": { "name": "IP externe" },
-      "external_ipv6": { "name": "IPv6 externe" },
-      "link_type": { "name": "Type de lien" },
-      "connected_devices": { "name": "Appareils connectés" },
-      "wan_received": { "name": "Données reçues" },
-      "wan_sent": { "name": "Données envoyées" },
-      "dsl_downstream_rate": { "name": "Débit DSL descendant" },
-      "dsl_upstream_rate": { "name": "Débit DSL montant" },
-      "dsl_downstream_max_rate": { "name": "Débit DSL descendant max" },
-      "dsl_upstream_max_rate": { "name": "Débit DSL montant max" },
-      "dsl_downstream_noise_margin": { "name": "Marge de bruit DSL descendante" },
-      "dsl_upstream_noise_margin": { "name": "Marge de bruit DSL montante" },
-      "dsl_downstream_attenuation": { "name": "Atténuation DSL descendante" },
-      "dsl_upstream_attenuation": { "name": "Atténuation DSL montante" },
-      "fiber_rx_power": { "name": "Puissance fibre reçue" },
-      "fiber_tx_power": { "name": "Puissance fibre émise" },
-      "fiber_onu_state": { "name": "État ONU fibre" }
+      "last_boot": {
+        "name": "Dernier démarrage"
+      },
+      "external_ip": {
+        "name": "IP externe"
+      },
+      "external_ipv6": {
+        "name": "IPv6 externe"
+      },
+      "link_type": {
+        "name": "Type de lien"
+      },
+      "connected_devices": {
+        "name": "Appareils connectés"
+      },
+      "wan_received": {
+        "name": "Données reçues"
+      },
+      "wan_sent": {
+        "name": "Données envoyées"
+      },
+      "dsl_downstream_rate": {
+        "name": "Débit DSL descendant"
+      },
+      "dsl_upstream_rate": {
+        "name": "Débit DSL montant"
+      },
+      "dsl_downstream_max_rate": {
+        "name": "Débit DSL descendant max"
+      },
+      "dsl_upstream_max_rate": {
+        "name": "Débit DSL montant max"
+      },
+      "dsl_downstream_noise_margin": {
+        "name": "Marge de bruit DSL descendante"
+      },
+      "dsl_upstream_noise_margin": {
+        "name": "Marge de bruit DSL montante"
+      },
+      "dsl_downstream_attenuation": {
+        "name": "Atténuation DSL descendante"
+      },
+      "dsl_upstream_attenuation": {
+        "name": "Atténuation DSL montante"
+      },
+      "fiber_rx_power": {
+        "name": "Puissance fibre reçue"
+      },
+      "fiber_tx_power": {
+        "name": "Puissance fibre émise"
+      },
+      "fiber_onu_state": {
+        "name": "État ONU fibre"
+      },
+      "fiber_temperature": {
+        "name": "Température module fibre"
+      },
+      "missed_calls": {
+        "name": "Appels manqués"
+      },
+      "firewall_level": {
+        "name": "Niveau du pare-feu"
+      }
     },
     "switch": {
-      "wifi": { "name": "Wi-Fi" },
-      "guest_wifi": { "name": "Wi-Fi invité" }
+      "wifi": {
+        "name": "Wi-Fi"
+      },
+      "guest_wifi": {
+        "name": "Wi-Fi invité"
+      }
     }
   },
   "exceptions": {
-    "action_failed": { "message": "La Livebox a refusé la requête : {error}" }
+    "action_failed": {
+      "message": "La Livebox a refusé la requête : {error}"
+    }
   }
 }

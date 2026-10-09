@@ -38,6 +38,11 @@ async def test_setup_and_entities(
         == STATE_ON
     )
     assert hass.states.get("switch.livebox_wi_fi").state == STATE_ON
+    assert hass.states.get("sensor.livebox_fiber_onu_state").state == "O5_Operation"
+    assert hass.states.get("sensor.livebox_fiber_module_temperature").state == "51"
+    assert hass.states.get("sensor.livebox_missed_calls").state == "1"
+    assert hass.states.get("sensor.livebox_firewall_level").state == "Low"
+    assert hass.states.get("sensor.livebox_data_received").state == "0.123456789"
     # No DSL line on a fiber box.
     assert hass.states.get("sensor.livebox_dsl_download_rate") is None
 

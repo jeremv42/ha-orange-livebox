@@ -19,6 +19,7 @@ from homeassistant.const import (
     EntityCategory,
     UnitOfDataRate,
     UnitOfInformation,
+    UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
@@ -67,12 +68,24 @@ def _has_stats(data: LiveboxData) -> bool:
     return data.wan_stats is not None
 
 
+def _ipv6(data: LiveboxData) -> str | None:
+    return data.wan.get("IPv6Address") or (data.ipv6 or {}).get("IPv6Address") or None
+
+
+def _missed_calls(data: LiveboxData) -> int:
+    return sum(
+        call.get("callType") == "missed" and not call.get("viewed")
+        for call in data.calls or []
+    )
+
+
 SENSORS: tuple[LiveboxSensorDescription, ...] = (
     LiveboxSensorDescription(
         key="last_boot",
         translation_key="last_boot",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
+        exists_fn=lambda data: "UpTime" in data.info,
         value_fn=lambda data: data.boot_time,
     ),
     LiveboxSensorDescription(
@@ -88,8 +101,8 @@ SENSORS: tuple[LiveboxSensorDescription, ...] = (
         translation_key="external_ipv6",
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        exists_fn=lambda data: "IPv6Address" in data.wan,
-        value_fn=lambda data: data.wan.get("IPv6Address") or None,
+        exists_fn=lambda data: "IPv6Address" in data.wan or data.ipv6 is not None,
+        value_fn=_ipv6,
     ),
     LiveboxSensorDescription(
         key="link_type",
@@ -113,7 +126,7 @@ SENSORS: tuple[LiveboxSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfInformation.BYTES,
         suggested_unit_of_measurement=UnitOfInformation.GIGABYTES,
         exists_fn=_has_stats,
-        value_fn=lambda data: (data.wan_stats or {}).get("RxBytes"),
+        value_fn=lambda data: (data.wan_stats or {}).get("rx_bytes"),
     ),
     LiveboxSensorDescription(
         key="wan_sent",
@@ -123,7 +136,7 @@ SENSORS: tuple[LiveboxSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfInformation.BYTES,
         suggested_unit_of_measurement=UnitOfInformation.GIGABYTES,
         exists_fn=_has_stats,
-        value_fn=lambda data: (data.wan_stats or {}).get("TxBytes"),
+        value_fn=lambda data: (data.wan_stats or {}).get("tx_bytes"),
     ),
     # xDSL line
     LiveboxSensorDescription(
@@ -234,7 +247,36 @@ SENSORS: tuple[LiveboxSensorDescription, ...] = (
         translation_key="fiber_onu_state",
         entity_category=EntityCategory.DIAGNOSTIC,
         exists_fn=_has_gpon,
-        value_fn=lambda data: (data.gpon or {}).get("ONUState"),
+        value_fn=lambda data: (
+            (data.gpon or {}).get("OnuState")
+            or (data.gpon or {}).get("ONUState")
+            or data.wan.get("GponState")
+        ),
+    ),
+    LiveboxSensorDescription(
+        key="fiber_temperature",
+        translation_key="fiber_temperature",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        exists_fn=lambda data: "Temperature" in (data.gpon or {}),
+        value_fn=lambda data: (data.gpon or {}).get("Temperature"),
+    ),
+    # Telephony and security
+    LiveboxSensorDescription(
+        key="missed_calls",
+        translation_key="missed_calls",
+        state_class=SensorStateClass.MEASUREMENT,
+        exists_fn=lambda data: data.calls is not None,
+        value_fn=_missed_calls,
+    ),
+    LiveboxSensorDescription(
+        key="firewall_level",
+        translation_key="firewall_level",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        exists_fn=lambda data: data.firewall_level is not None,
+        value_fn=lambda data: data.firewall_level,
     ),
 )
 
