@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import ATTR_ENTITY_ID, STATE_HOME, STATE_NOT_HOME, STATE_ON
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
+from homeassistant.loader import async_get_integration
 
 
 async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
@@ -97,3 +98,8 @@ async def test_auth_failure_starts_reauth(
     assert mock_config_entry.state is ConfigEntryState.SETUP_ERROR
     flows = hass.config_entries.flow.async_progress()
     assert [flow["context"]["source"] for flow in flows] == ["reauth"]
+
+
+async def test_brand_images(hass: HomeAssistant) -> None:
+    integration = await async_get_integration(hass, "orange_livebox")
+    assert integration.has_branding

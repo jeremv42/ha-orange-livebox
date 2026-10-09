@@ -1,3 +1,5 @@
+<img src="custom_components/orange_livebox/brand/icon.png" alt="" width="96" align="right">
+
 # Orange Livebox for Home Assistant
 
 Custom integration that connects Home Assistant to an Orange Livebox router
