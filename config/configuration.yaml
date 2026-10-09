@@ -1,0 +1,7 @@
+# Minimal configuration for local development (scripts/develop)
+default_config:
+
+logger:
+  default: info
+  logs:
+    custom_components.orange_livebox: debug

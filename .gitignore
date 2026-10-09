@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local Home Assistant dev instance (only configuration.yaml is versioned)
+config/*
+!config/configuration.yaml
+
+# Probe dumps may contain personal data (MACs, IPs, serial)
+probe-*.json
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

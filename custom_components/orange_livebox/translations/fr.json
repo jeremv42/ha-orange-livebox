@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connexion à votre Livebox",
+        "data": {
+          "host": "Hôte",
+          "username": "Nom d'utilisateur",
+          "password": "Mot de passe",
+          "ssl": "Utiliser HTTPS",
+          "verify_ssl": "Vérifier le certificat SSL"
+        },
+        "data_description": {
+          "host": "Adresse IP ou nom d'hôte de la Livebox, généralement 192.168.1.1.",
+          "username": "Identifiant d'administration, généralement admin.",
+          "password": "Mot de passe d'administration (par défaut les 8 premiers caractères de la clé Wi-Fi inscrite sous la box)."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Nouvelle authentification",
+        "description": "La Livebox {host} a refusé le mot de passe enregistré.",
+        "data": {
+          "password": "Mot de passe"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Échec de connexion",
+      "invalid_auth": "Identifiants invalides",
+      "unknown": "Erreur inattendue"
+    },
+    "abort": {
+      "already_configured": "Cet appareil est déjà configuré",
+      "no_serial": "La Livebox n'a pas renvoyé de numéro de série.",
+      "reauth_successful": "Nouvelle authentification réussie"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "wan": { "name": "Connexion Internet" },
+      "iptv": { "name": "Service TV" },
+      "phone_line": { "name": "Ligne téléphonique {line}" }
+    },
+    "button": {
+      "ring_phone": { "name": "Faire sonner le téléphone" }
+    },
+    "sensor": {
+      "last_boot": { "name": "Dernier démarrage" },
+      "external_ip": { "name": "IP externe" },
+      "external_ipv6": { "name": "IPv6 externe" },
+      "link_type": { "name": "Type de lien" },
+      "connected_devices": { "name": "Appareils connectés" },
+      "wan_received": { "name": "Données reçues" },
+      "wan_sent": { "name": "Données envoyées" },
+      "dsl_downstream_rate": { "name": "Débit DSL descendant" },
+      "dsl_upstream_rate": { "name": "Débit DSL montant" },
+      "dsl_downstream_max_rate": { "name": "Débit DSL descendant max" },
+      "dsl_upstream_max_rate": { "name": "Débit DSL montant max" },
+      "dsl_downstream_noise_margin": { "name": "Marge de bruit DSL descendante" },
+      "dsl_upstream_noise_margin": { "name": "Marge de bruit DSL montante" },
+      "dsl_downstream_attenuation": { "name": "Atténuation DSL descendante" },
+      "dsl_upstream_attenuation": { "name": "Atténuation DSL montante" },
+      "fiber_rx_power": { "name": "Puissance fibre reçue" },
+      "fiber_tx_power": { "name": "Puissance fibre émise" },
+      "fiber_onu_state": { "name": "État ONU fibre" }
+    },
+    "switch": {
+      "wifi": { "name": "Wi-Fi" },
+      "guest_wifi": { "name": "Wi-Fi invité" }
+    }
+  },
+  "exceptions": {
+    "action_failed": { "message": "La Livebox a refusé la requête : {error}" }
+  }
+}

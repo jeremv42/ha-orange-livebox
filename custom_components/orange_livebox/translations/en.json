@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your Livebox",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "ssl": "Use HTTPS",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "host": "IP address or hostname of the Livebox, usually 192.168.1.1.",
+          "username": "Administration username, usually admin.",
+          "password": "Administration password (by default the first 8 characters of the Wi-Fi key printed under the box)."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate",
+        "description": "The Livebox at {host} rejected the stored password.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "Device is already configured",
+      "no_serial": "The Livebox did not report a serial number.",
+      "reauth_successful": "Re-authentication was successful"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "wan": { "name": "Internet connection" },
+      "iptv": { "name": "TV service" },
+      "phone_line": { "name": "Phone line {line}" }
+    },
+    "button": {
+      "ring_phone": { "name": "Ring phone" }
+    },
+    "sensor": {
+      "last_boot": { "name": "Last boot" },
+      "external_ip": { "name": "External IP" },
+      "external_ipv6": { "name": "External IPv6" },
+      "link_type": { "name": "Link type" },
+      "connected_devices": { "name": "Connected devices" },
+      "wan_received": { "name": "Data received" },
+      "wan_sent": { "name": "Data sent" },
+      "dsl_downstream_rate": { "name": "DSL download rate" },
+      "dsl_upstream_rate": { "name": "DSL upload rate" },
+      "dsl_downstream_max_rate": { "name": "DSL max download rate" },
+      "dsl_upstream_max_rate": { "name": "DSL max upload rate" },
+      "dsl_downstream_noise_margin": { "name": "DSL download noise margin" },
+      "dsl_upstream_noise_margin": { "name": "DSL upload noise margin" },
+      "dsl_downstream_attenuation": { "name": "DSL download attenuation" },
+      "dsl_upstream_attenuation": { "name": "DSL upload attenuation" },
+      "fiber_rx_power": { "name": "Fiber received power" },
+      "fiber_tx_power": { "name": "Fiber transmitted power" },
+      "fiber_onu_state": { "name": "Fiber ONU state" }
+    },
+    "switch": {
+      "wifi": { "name": "Wi-Fi" },
+      "guest_wifi": { "name": "Guest Wi-Fi" }
+    }
+  },
+  "exceptions": {
+    "action_failed": { "message": "The Livebox rejected the request: {error}" }
+  }
+}

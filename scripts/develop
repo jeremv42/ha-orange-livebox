@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Run a local Home Assistant instance with this integration loaded.
+# UI on http://localhost:8123
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+mkdir -p config/custom_components
+ln -sfn "$PWD/custom_components/orange_livebox" config/custom_components/orange_livebox
+
+exec .venv/bin/hass --config "$PWD/config" --debug

@@ -1,0 +1,12 @@
+{
+  "domain": "orange_livebox",
+  "name": "Orange Livebox",
+  "codeowners": ["@jeremv42"],
+  "config_flow": true,
+  "documentation": "https://github.com/jeremv42/ha-orange-livebox",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/jeremv42/ha-orange-livebox/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
