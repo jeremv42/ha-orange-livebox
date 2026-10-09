@@ -59,7 +59,7 @@ class LiveboxData:
     dsl: dict[str, Any] | None = None
     gpon: dict[str, Any] | None = None
     ipv6: dict[str, Any] | None = None
-    wan_stats: dict[str, int] | None = None
+    wan_stats: dict[str, Any] | None = None
     wifi: dict[str, Any] | None = None
     guest_wifi: dict[str, Any] | None = None
     iptv: dict[str, Any] | None = None
@@ -68,6 +68,8 @@ class LiveboxData:
     firewall_level: str | None = None
     devices: dict[str, dict[str, Any]] = field(default_factory=dict)
     boot_time: datetime | None = None
+    download_rate: float | None = None
+    upload_rate: float | None = None
 
 
 def _payload(result: dict[str, Any]) -> Any:
@@ -76,6 +78,14 @@ def _payload(result: dict[str, Any]) -> Any:
     if isinstance(data, (dict, list)) and data:
         return data
     return result.get("status")
+
+
+def _parse_time(value: Any) -> datetime | None:
+    """Parse an ISO 8601 timestamp sent by the Livebox."""
+    try:
+        return datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _first_mib(status: Any, mib: str) -> dict[str, Any] | None:
@@ -264,17 +274,19 @@ class LiveboxClient:
         ipv6 = await self._optional("NMC.IPv6", "get")
         return ipv6 if isinstance(ipv6, dict) else None
 
-    async def async_get_wan_stats(self) -> dict[str, int] | None:
+    async def async_get_wan_stats(self) -> dict[str, Any] | None:
         """Return the WAN traffic counters as ``rx_bytes``/``tx_bytes``.
 
-        ``HomeLan.getWANCounters`` exists on recent firmwares; older ones only
-        expose the counters of the WAN network interface.
+        ``HomeLan.getWANCounters`` exists on recent firmwares and also gives
+        ``updated``, the time the box last refreshed the counters; older
+        firmwares only expose the counters of the WAN network interface.
         """
         counters = await self._optional("HomeLan", "getWANCounters")
         if isinstance(counters, dict) and "BytesReceived" in counters:
             return {
                 "rx_bytes": counters["BytesReceived"],
                 "tx_bytes": counters["BytesSent"],
+                "updated": _parse_time(counters.get("LastUpdate")),
             }
         for interface in ("data", "veip0"):
             stats = await self._optional(f"NeMo.Intf.{interface}", "getNetDevStats")

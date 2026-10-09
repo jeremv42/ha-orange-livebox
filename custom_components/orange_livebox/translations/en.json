@@ -115,6 +115,12 @@
       },
       "firewall_level": {
         "name": "Firewall level"
+      },
+      "download_rate": {
+        "name": "Download speed"
+      },
+      "upload_rate": {
+        "name": "Upload speed"
       }
     },
     "switch": {

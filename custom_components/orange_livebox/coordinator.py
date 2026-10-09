@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from datetime import timedelta
+from datetime import datetime, timedelta
 import logging
 from typing import Any
 
@@ -69,6 +69,8 @@ class LiveboxCoordinator(DataUpdateCoordinator[LiveboxData]):
             update_interval=SCAN_INTERVAL,
         )
         self.client = client
+        # (time, rx_bytes, tx_bytes) of the last counters reading
+        self._last_counters: tuple[datetime, int, int] | None = None
 
     async def _async_update_data(self) -> LiveboxData:
         try:
@@ -88,4 +90,34 @@ class LiveboxCoordinator(DataUpdateCoordinator[LiveboxData]):
             data.boot_time = boot_time
         elif self.data:
             data.boot_time = self.data.boot_time
+
+        self._update_rates(data)
         return data
+
+    def _update_rates(self, data: LiveboxData) -> None:
+        """Compute the WAN speed from two readings of the traffic counters."""
+        if (stats := data.wan_stats) is None:
+            return
+        sample = (
+            stats.get("updated") or dt_util.utcnow(),
+            stats["rx_bytes"],
+            stats["tx_bytes"],
+        )
+        previous, self._last_counters = self._last_counters, sample
+        if previous is None:
+            return
+        if sample[0] == previous[0]:
+            # The box did not refresh its counters since the last poll.
+            if self.data:
+                data.download_rate = self.data.download_rate
+                data.upload_rate = self.data.upload_rate
+            return
+        elapsed = (sample[0] - previous[0]).total_seconds()
+        received = sample[1] - previous[1]
+        sent = sample[2] - previous[2]
+        rebooted = self.data is not None and self.data.boot_time != data.boot_time
+        if elapsed <= 0 or received < 0 or sent < 0 or rebooted:
+            # Counters reset (Livebox restart): wait for the next reading.
+            return
+        data.download_rate = round(received * 8 / elapsed / 1000, 1)
+        data.upload_rate = round(sent * 8 / elapsed / 1000, 1)

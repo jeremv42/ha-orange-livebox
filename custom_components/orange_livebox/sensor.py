@@ -138,6 +138,28 @@ SENSORS: tuple[LiveboxSensorDescription, ...] = (
         exists_fn=_has_stats,
         value_fn=lambda data: (data.wan_stats or {}).get("tx_bytes"),
     ),
+    LiveboxSensorDescription(
+        key="download_rate",
+        translation_key="download_rate",
+        device_class=SensorDeviceClass.DATA_RATE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfDataRate.KILOBITS_PER_SECOND,
+        suggested_unit_of_measurement=UnitOfDataRate.MEGABITS_PER_SECOND,
+        suggested_display_precision=1,
+        exists_fn=_has_stats,
+        value_fn=lambda data: data.download_rate,
+    ),
+    LiveboxSensorDescription(
+        key="upload_rate",
+        translation_key="upload_rate",
+        device_class=SensorDeviceClass.DATA_RATE,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=UnitOfDataRate.KILOBITS_PER_SECOND,
+        suggested_unit_of_measurement=UnitOfDataRate.MEGABITS_PER_SECOND,
+        suggested_display_precision=1,
+        exists_fn=_has_stats,
+        value_fn=lambda data: data.upload_rate,
+    ),
     # xDSL line
     LiveboxSensorDescription(
         key="dsl_downstream_rate",

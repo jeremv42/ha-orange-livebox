@@ -10,7 +10,7 @@ No cloud, polling every 30 seconds.
 
 | Platform | Entities |
 | --- | --- |
-| Sensor | Last boot, external IPv4/IPv6, link type, connected devices, data received/sent, missed calls, firewall level |
+| Sensor | Last boot, external IPv4/IPv6, link type, connected devices, data received/sent, download/upload speed, missed calls, firewall level |
 | Sensor (xDSL) | Download/upload rate and max rate, noise margins, attenuation |
 | Sensor (fiber) | Optical received/transmitted power, ONU state, module temperature |
 | Binary sensor | Internet connection, TV service, one per phone line |

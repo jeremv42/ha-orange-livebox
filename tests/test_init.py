@@ -2,16 +2,25 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from unittest.mock import AsyncMock
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.orange_livebox.api import LiveboxAuthError
+from custom_components.orange_livebox.api import LiveboxAuthError, LiveboxData
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import ATTR_ENTITY_ID, STATE_HOME, STATE_NOT_HOME, STATE_ON
+from homeassistant.const import (
+    ATTR_ENTITY_ID,
+    STATE_HOME,
+    STATE_NOT_HOME,
+    STATE_ON,
+    STATE_UNKNOWN,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from homeassistant.loader import async_get_integration
+
+from .conftest import make_data
 
 
 async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
@@ -103,3 +112,46 @@ async def test_auth_failure_starts_reauth(
 async def test_brand_images(hass: HomeAssistant) -> None:
     integration = await async_get_integration(hass, "orange_livebox")
     assert integration.has_branding
+
+
+async def test_wan_speed(
+    hass: HomeAssistant, mock_client: AsyncMock, mock_config_entry: MockConfigEntry
+) -> None:
+    t0 = datetime(2026, 10, 9, 21, 0, tzinfo=UTC)
+    readings = iter(
+        [
+            (t0, 1_000_000, 500_000),
+            # +12.5 MB down / +1.25 MB up in 10 s: 10 Mbit/s / 1 Mbit/s
+            (t0 + timedelta(seconds=10), 13_500_000, 1_750_000),
+            # The box has not refreshed its counters: keep the last speed
+            (t0 + timedelta(seconds=10), 13_500_000, 1_750_000),
+            # Counters went back to zero (Livebox restart)
+            (t0 + timedelta(seconds=40), 2_000, 1_000),
+        ]
+    )
+
+    def fetch() -> LiveboxData:
+        updated, rx, tx = next(readings)
+        data = make_data()
+        data.wan_stats = {"rx_bytes": rx, "tx_bytes": tx, "updated": updated}
+        return data
+
+    mock_client.async_fetch_all.side_effect = fetch
+    await _setup(hass, mock_config_entry)
+    coordinator = mock_config_entry.runtime_data
+
+    def speeds() -> tuple[str, str]:
+        return (
+            hass.states.get("sensor.livebox_download_speed").state,
+            hass.states.get("sensor.livebox_upload_speed").state,
+        )
+
+    assert speeds() == (STATE_UNKNOWN, STATE_UNKNOWN)
+    for expected in (
+        ("10.0", "1.0"),
+        ("10.0", "1.0"),
+        (STATE_UNKNOWN, STATE_UNKNOWN),
+    ):
+        await coordinator.async_refresh()
+        await hass.async_block_till_done()
+        assert speeds() == expected
