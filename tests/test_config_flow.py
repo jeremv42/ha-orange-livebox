@@ -19,6 +19,8 @@ from homeassistant.data_entry_flow import FlowResultType
 
 from .conftest import SERIAL, USER_INPUT
 
+pytestmark = pytest.mark.usefixtures("mock_setup_entry")
+
 
 async def test_user_flow(hass: HomeAssistant, mock_client: AsyncMock) -> None:
     result = await hass.config_entries.flow.async_init(
@@ -91,6 +93,7 @@ async def test_reauth(
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {CONF_PASSWORD: "new-secret"}
     )
+    await hass.async_block_till_done()
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reauth_successful"
     assert mock_config_entry.data[CONF_PASSWORD] == "new-secret"

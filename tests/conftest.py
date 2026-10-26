@@ -112,6 +112,15 @@ def mock_config_entry() -> MockConfigEntry:
 
 
 @pytest.fixture
+def mock_setup_entry() -> Generator[AsyncMock]:
+    """Skip the real entry setup that config flows trigger (create, reload)."""
+    with patch(
+        "custom_components.orange_livebox.async_setup_entry", return_value=True
+    ) as setup_entry:
+        yield setup_entry
+
+
+@pytest.fixture
 def mock_client() -> Generator[AsyncMock]:
     """Patch the Livebox client used by the integration and the config flow."""
     with patch(
